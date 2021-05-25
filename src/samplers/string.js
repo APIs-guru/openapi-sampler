@@ -120,6 +120,9 @@ const stringFormats = {
 };
 
 export function sampleString(schema, options, spec, context) {
+  if (options && options.omissible) {
+    return null;
+  }
   let format = schema.format || 'default';
   let sampler = stringFormats[format] || defaultSample;
   let propertyName = context && context.propertyName;

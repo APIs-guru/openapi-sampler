@@ -93,7 +93,7 @@ export function traverse(schema, options, spec, context) {
     example = schema.default;
   } else if (schema.const !== undefined) {
     example = schema.const;
-  } else if (schema.enum !== undefined && schema.enum.length) {
+  } else if (schema.enum !== undefined && schema.enum.length && !options.disableNonRequiredAutoGen) {
     example = schema.enum[0];
   } else if (schema.examples !== undefined && schema.examples.length) {
     example = schema.examples[0];

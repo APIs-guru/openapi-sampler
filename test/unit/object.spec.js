@@ -102,5 +102,46 @@ describe('sampleObject', () => {
       fooId: 'fb4274c7-4fcd-4035-8958-a680548957ff',
       barId: '3c966637-4898-4972-9a9d-baefa6cd6c89'
     });
-  })
+  });
+
+  describe('disableNonRequiredAutoGen', () => {
+
+    it('should skip properties without explicit example value', () => {
+      res = sampleObject({
+        properties: {
+          a: { type: 'string', enum: ['foo', 'bar'] },
+          b: { type: 'integer', default: 100 },
+          c: { type: 'string' },
+          d: { type: 'string', example: 'Example' }
+        },
+      }, { disableNonRequiredAutoGen: true });
+      expect(res).to.deep.equal({
+        b: 100,
+        d: 'Example'
+      });
+    });
+
+    it('should skip additional properties', () => {
+      res = sampleObject({
+        properties: {
+          a: { type: 'string', example: 'Example' },
+        },
+        additionalProperties: { type: 'string' }
+      }, { disableNonRequiredAutoGen: true });
+      expect(res).to.deep.equal({
+        a: 'Example'
+      });
+    });
+
+    it('should return null if omissible=true and no property has example', () => {
+      res = sampleObject({
+        properties: {
+          a: { type: 'string' },
+          b: { type: 'integer' }
+        },
+      }, { disableNonRequiredAutoGen: true, omissible: true });
+      expect(res).to.be.null;
+    });
+
+  });
 });
